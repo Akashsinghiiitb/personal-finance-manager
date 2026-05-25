@@ -88,7 +88,7 @@ const Register = () => {
                 <input
                   type="text"
                   required
-                  placeholder="John Doe"
+                  placeholder="Akash Singh"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className="block w-full pl-12 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-all text-sm"
@@ -108,7 +108,7 @@ const Register = () => {
                 <input
                   type="email"
                   required
-                  placeholder="john@example.com"
+                  placeholder="akash@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full pl-12 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-all text-sm"
@@ -128,7 +128,7 @@ const Register = () => {
                 <input
                   type="text"
                   required
-                  placeholder="+1234567890"
+                  placeholder="+919876543210"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className="block w-full pl-12 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-all text-sm"
