@@ -42,15 +42,21 @@ public class SavingsGoalService {
         if (request.getTargetDate() == null || request.getTargetDate().isBefore(LocalDate.now())) {
             throw new BadRequestException("Target date must be in the future or present");
         }
-        if (request.getStartDate() == null) {
-            throw new BadRequestException("Start date must not be null");
+
+        LocalDate startDate = request.getStartDate();
+        if (startDate == null) {
+            startDate = LocalDate.now();
+        }
+
+        if (startDate.isAfter(request.getTargetDate())) {
+            throw new BadRequestException("Start date cannot be after target date");
         }
 
         SavingsGoal goal = SavingsGoal.builder()
             .goalName(request.getGoalName().trim())
             .targetAmount(request.getTargetAmount())
             .targetDate(request.getTargetDate())
-            .startDate(request.getStartDate())
+            .startDate(startDate)
             .user(user)
             .build();
 
@@ -108,8 +114,18 @@ public class SavingsGoalService {
             throw new BadRequestException("Target date must be in the future or present");
         }
 
+        LocalDate newStartDate = request.getStartDate() != null ? request.getStartDate() : goal.getStartDate();
+        LocalDate newTargetDate = request.getTargetDate() != null ? request.getTargetDate() : goal.getTargetDate();
+        if (newStartDate != null && newTargetDate != null && newStartDate.isAfter(newTargetDate)) {
+            throw new BadRequestException("Start date cannot be after target date");
+        }
+
         if (request.getGoalName() != null) {
-            goal.setGoalName(request.getGoalName().trim());
+            String name = request.getGoalName().trim();
+            if (name.isEmpty()) {
+                throw new BadRequestException("Goal name must not be blank");
+            }
+            goal.setGoalName(name);
         }
         if (request.getTargetAmount() != null) {
             goal.setTargetAmount(request.getTargetAmount());

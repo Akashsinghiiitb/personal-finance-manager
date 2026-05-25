@@ -29,6 +29,11 @@ public class SavingsGoalMapper {
             }
         }
 
+        progressPercentage = progressPercentage.stripTrailingZeros();
+        if (progressPercentage.scale() < 1) {
+            progressPercentage = progressPercentage.setScale(1, RoundingMode.HALF_UP);
+        }
+
         return SavingsGoalResponse.builder()
             .id(goal.getId())
             .goalName(goal.getGoalName())

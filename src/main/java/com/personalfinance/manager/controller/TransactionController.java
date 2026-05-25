@@ -34,18 +34,25 @@ public class TransactionController {
     public ResponseEntity<TransactionListResponse> getTransactions(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(required = false) Long categoryId) {
-        log.info("Received request to get transactions with filters: startDate={}, endDate={}, categoryId={}", startDate, endDate, categoryId);
-        List<TransactionResponse> responses = transactionService.getTransactions(startDate, endDate, categoryId);
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String category) {
+        log.info("Received request to get transactions with filters: startDate={}, endDate={}, categoryId={}, category={}",
+                startDate, endDate, categoryId, category);
+        List<TransactionResponse> responses;
+        if (category != null) {
+            responses = transactionService.getTransactions(startDate, endDate, categoryId, category);
+        } else {
+            responses = transactionService.getTransactions(startDate, endDate, categoryId);
+        }
         return ResponseEntity.ok(TransactionListResponse.builder()
-            .transactions(responses)
-            .build());
+                .transactions(responses)
+                .build());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TransactionResponse> updateTransaction(
             @PathVariable Long id,
-            @Valid @RequestBody TransactionRequest request) {
+            @RequestBody TransactionRequest request) {
         log.info("Received request to update transaction with ID: {}", id);
         TransactionResponse response = transactionService.updateTransaction(id, request);
         return ResponseEntity.ok(response);
@@ -56,7 +63,7 @@ public class TransactionController {
         log.info("Received request to delete transaction with ID: {}", id);
         transactionService.deleteTransaction(id);
         return ResponseEntity.ok(GenericResponse.builder()
-            .message("Transaction deleted successfully")
-            .build());
+                .message("Transaction deleted successfully")
+                .build());
     }
 }

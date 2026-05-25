@@ -135,6 +135,38 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex) {
+        log.warn("HTTP message not readable: {}", ex.getMessage());
+        List<String> details = new ArrayList<>();
+        Throwable cause = ex.getCause();
+        if (cause != null) {
+            details.add(cause.getLocalizedMessage() != null ? cause.getLocalizedMessage() : cause.getMessage());
+        } else {
+            details.add(ex.getMessage());
+        }
+        
+        ErrorResponse errorResponse = ErrorResponse.builder()
+            .timestamp(Instant.now().toString())
+            .status(HttpStatus.BAD_REQUEST.value())
+            .message("Validation failed")
+            .details(details)
+            .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException ex) {
+        log.warn("Method argument type mismatch: {}", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+            .timestamp(Instant.now().toString())
+            .status(HttpStatus.BAD_REQUEST.value())
+            .message("Validation failed")
+            .details(Collections.singletonList(ex.getName() + " should be of type " + (ex.getRequiredType() != null ? ex.getRequiredType().getName() : "required type")))
+            .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         log.error("Unhandled Exception: ", ex);
@@ -142,7 +174,7 @@ public class GlobalExceptionHandler {
             .timestamp(Instant.now().toString())
             .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
             .message("An unexpected error occurred")
-            .details(Collections.singletonList(ex.getMessage()))
+            .details(Collections.emptyList())
             .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }

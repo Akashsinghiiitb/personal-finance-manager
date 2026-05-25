@@ -98,7 +98,7 @@ public class CategoryControllerTest {
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Taxes"))
-                .andExpect(jsonPath("$.isCustom").value(true));
+                .andExpect(jsonPath("$.custom").value(true));
     }
 
     @Test

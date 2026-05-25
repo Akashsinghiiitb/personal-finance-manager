@@ -11,5 +11,6 @@ import lombok.*;
 public class CategoryResponse {
     private String name;
     private TransactionType type;
+    @com.fasterxml.jackson.annotation.JsonProperty("custom")
     private Boolean isCustom;
 }

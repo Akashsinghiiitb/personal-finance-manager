@@ -154,17 +154,24 @@ public class TransactionServiceTest {
     }
 
     @Test
-    void updateTransaction_changeDate_throwsBadRequestException() {
+    void updateTransaction_changeDate_ignoresDate() {
         when(securityUtils.getCurrentUser()).thenReturn(mockUser);
         when(transactionRepository.findByIdAndUserId(100L, 1L)).thenReturn(Optional.of(mockTransaction));
+        when(categoryRepository.findByNameIgnoreCaseAndUserId("Food", 1L)).thenReturn(Optional.empty());
+        when(categoryRepository.findByNameIgnoreCaseAndUserIdIsNull("Food")).thenReturn(Optional.of(mockCategory));
+        when(transactionRepository.save(any(Transaction.class))).thenReturn(mockTransaction);
 
+        LocalDate originalDate = mockTransaction.getDate();
         TransactionRequest request = TransactionRequest.builder()
                 .amount(new BigDecimal("60.00"))
-                .date(LocalDate.now().minusDays(2)) // Different date
+                .date(originalDate.minusDays(2)) // Different date
                 .category("Food")
                 .build();
 
-        assertThrows(BadRequestException.class, () -> transactionService.updateTransaction(100L, request));
+        TransactionResponse response = transactionService.updateTransaction(100L, request);
+
+        assertNotNull(response);
+        assertEquals(originalDate, mockTransaction.getDate());
     }
 
     @Test

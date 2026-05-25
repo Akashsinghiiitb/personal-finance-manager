@@ -15,18 +15,15 @@ import java.time.LocalDate;
 @Builder
 public class TransactionRequest {
 
-    public interface OnCreate {}
-    public interface OnUpdate {}
-
-    @NotNull(message = "Amount must not be null", groups = OnCreate.class)
-    @Positive(message = "Amount must be a positive decimal greater than 0", groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(message = "Amount must not be null")
+    @Positive(message = "Amount must be a positive decimal greater than 0")
     private BigDecimal amount;
 
-    @NotNull(message = "Date must not be null", groups = OnCreate.class)
-    @PastOrPresent(message = "Future date is not allowed", groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(message = "Date must not be null")
+    @PastOrPresent(message = "Future date is not allowed")
     private LocalDate date;
 
-    @NotBlank(message = "Category name must not be blank", groups = OnCreate.class)
+    @NotBlank(message = "Category name must not be blank")
     private String category;
 
     private String description;

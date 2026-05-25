@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReportController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, CustomAuthenticationEntryPoint.class, CustomAccessDeniedHandler.class})
 public class ReportControllerTest {
 
     @Autowired
@@ -36,12 +36,6 @@ public class ReportControllerTest {
 
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
-
-    @MockBean
-    private CustomAuthenticationEntryPoint authenticationEntryPoint;
-
-    @MockBean
-    private CustomAccessDeniedHandler accessDeniedHandler;
 
     private MonthlyReportResponse monthlyReportResponse;
     private YearlyReportResponse yearlyReportResponse;

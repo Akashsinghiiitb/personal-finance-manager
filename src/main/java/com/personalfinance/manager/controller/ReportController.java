@@ -24,6 +24,9 @@ public class ReportController {
             @PathVariable int year,
             @PathVariable int month) {
         log.info("Received request for monthly report: year={}, month={}", year, month);
+        if (month < 1 || month > 12) {
+            throw new com.personalfinance.manager.exception.BadRequestException("Month must be between 1 and 12");
+        }
         MonthlyReportResponse response = reportService.getMonthlyReport(year, month);
         return ResponseEntity.ok(response);
     }

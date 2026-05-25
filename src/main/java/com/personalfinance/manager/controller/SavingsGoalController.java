@@ -33,8 +33,8 @@ public class SavingsGoalController {
         log.info("Received request to fetch all savings goals");
         List<SavingsGoalResponse> responses = savingsGoalService.getGoals();
         return ResponseEntity.ok(SavingsGoalListResponse.builder()
-            .goals(responses)
-            .build());
+                .goals(responses)
+                .build());
     }
 
     @GetMapping("/{id}")
@@ -47,7 +47,7 @@ public class SavingsGoalController {
     @PutMapping("/{id}")
     public ResponseEntity<SavingsGoalResponse> updateGoal(
             @PathVariable Long id,
-            @Valid @RequestBody SavingsGoalRequest request) {
+            @RequestBody SavingsGoalRequest request) {
         log.info("Received request to update savings goal with ID: {}", id);
         SavingsGoalResponse response = savingsGoalService.updateGoal(id, request);
         return ResponseEntity.ok(response);
@@ -58,7 +58,7 @@ public class SavingsGoalController {
         log.info("Received request to delete savings goal with ID: {}", id);
         savingsGoalService.deleteGoal(id);
         return ResponseEntity.ok(GenericResponse.builder()
-            .message("Savings goal deleted successfully")
-            .build());
+                .message("Savings goal deleted successfully")
+                .build());
     }
 }

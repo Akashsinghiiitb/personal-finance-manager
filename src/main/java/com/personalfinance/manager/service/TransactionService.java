@@ -65,6 +65,11 @@ public class TransactionService {
 
     @Transactional(readOnly = true)
     public List<TransactionResponse> getTransactions(LocalDate startDate, LocalDate endDate, Long categoryId) {
+        return getTransactions(startDate, endDate, categoryId, null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TransactionResponse> getTransactions(LocalDate startDate, LocalDate endDate, Long categoryId, String categoryName) {
         User user = securityUtils.getCurrentUser();
         if (user == null) {
             throw new UnauthorizedException("User not authenticated");
@@ -82,6 +87,9 @@ public class TransactionService {
         }
         if (categoryId != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("category").get("id"), categoryId));
+        }
+        if (categoryName != null && !categoryName.trim().isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("category").get("name")), categoryName.trim().toLowerCase()));
         }
 
         Sort sort = Sort.by(Sort.Direction.DESC, "date", "id");
@@ -102,25 +110,27 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findByIdAndUserId(id, user.getId())
             .orElseThrow(() -> new ResourceNotFoundException("Transaction not found or access denied"));
 
-        if (request.getDate() != null && !request.getDate().equals(transaction.getDate())) {
-            throw new BadRequestException("Transaction date cannot be updated");
-        }
-        if (request.getAmount() != null && request.getAmount().doubleValue() <= 0) {
-            throw new BadRequestException("Amount must be positive");
+        if (request.getAmount() != null) {
+            if (request.getAmount().doubleValue() <= 0) {
+                throw new BadRequestException("Amount must be positive");
+            }
+            transaction.setAmount(request.getAmount());
         }
 
         if (request.getCategory() != null) {
             String categoryName = request.getCategory().trim();
+            if (categoryName.isEmpty()) {
+                throw new BadRequestException("Category name must not be blank");
+            }
             Category category = categoryRepository.findByNameIgnoreCaseAndUserId(categoryName, user.getId())
                 .or(() -> categoryRepository.findByNameIgnoreCaseAndUserIdIsNull(categoryName))
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found: " + categoryName));
             transaction.setCategory(category);
         }
 
-        if (request.getAmount() != null) {
-            transaction.setAmount(request.getAmount());
+        if (request.getDescription() != null) {
+            transaction.setDescription(request.getDescription());
         }
-        transaction.setDescription(request.getDescription()); // description can be updated to null/empty
 
         Transaction updated = transactionRepository.save(transaction);
         log.info("Successfully updated transaction for user {}: ID={}", user.getUsername(), updated.getId());

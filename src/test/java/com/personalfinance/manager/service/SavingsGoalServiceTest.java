@@ -87,7 +87,7 @@ public class SavingsGoalServiceTest {
         // Progress: 3000 - 1000 = 2000
         assertEquals(new BigDecimal("2000.00"), response.getCurrentProgress());
         // Percentage: (2000 / 10000) * 100 = 20%
-        assertEquals(new BigDecimal("20.00"), response.getProgressPercentage());
+        assertEquals(new BigDecimal("20.0"), response.getProgressPercentage());
         // Remaining: 10000 - 2000 = 8000
         assertEquals(new BigDecimal("8000.00"), response.getRemainingAmount());
     }
@@ -133,7 +133,7 @@ public class SavingsGoalServiceTest {
         assertEquals(1, results.size());
         assertEquals(50L, results.get(0).getId());
         assertEquals(new BigDecimal("4000.00"), results.get(0).getCurrentProgress());
-        assertEquals(new BigDecimal("40.00"), results.get(0).getProgressPercentage());
+        assertEquals(new BigDecimal("40.0"), results.get(0).getProgressPercentage());
     }
 
     @Test
