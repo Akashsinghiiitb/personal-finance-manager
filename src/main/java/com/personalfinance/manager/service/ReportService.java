@@ -36,13 +36,14 @@ public class ReportService {
         LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
         log.info("Generating monthly report for user {} in range {} to {}", user.getUsername(), start, end);
 
-        List<Transaction> transactions = transactionRepository.findAll(
-            Specification.where(
-                (root, query, cb) -> cb.equal(root.get("user").get("id"), user.getId())
-            ).and(
-                (root, query, cb) -> cb.between(root.get("date"), start, end)
-            )
+        Specification<Transaction> spec = Specification.where(
+            (root, query, cb) -> cb.equal(root.get("user").get("id"), user.getId())
         );
+        spec = spec.and(
+            (root, query, cb) -> cb.between(root.get("date"), start, end)
+        );
+
+        List<Transaction> transactions = transactionRepository.findAll(spec);
 
         BigDecimal totalIncomeVal = BigDecimal.ZERO;
         BigDecimal totalExpensesVal = BigDecimal.ZERO;
@@ -84,13 +85,14 @@ public class ReportService {
         LocalDate end = LocalDate.of(year, 12, 31);
         log.info("Generating yearly report for user {} in range {} to {}", user.getUsername(), start, end);
 
-        List<Transaction> transactions = transactionRepository.findAll(
-            Specification.where(
-                (root, query, cb) -> cb.equal(root.get("user").get("id"), user.getId())
-            ).and(
-                (root, query, cb) -> cb.between(root.get("date"), start, end)
-            )
+        Specification<Transaction> spec = Specification.where(
+            (root, query, cb) -> cb.equal(root.get("user").get("id"), user.getId())
         );
+        spec = spec.and(
+            (root, query, cb) -> cb.between(root.get("date"), start, end)
+        );
+
+        List<Transaction> transactions = transactionRepository.findAll(spec);
 
         BigDecimal totalIncomeVal = BigDecimal.ZERO;
         BigDecimal totalExpensesVal = BigDecimal.ZERO;
