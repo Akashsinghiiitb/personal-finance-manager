@@ -60,6 +60,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         String allowedOriginsProp = env.getProperty("app.cors.allowed-origins");
+        if (allowedOriginsProp == null || allowedOriginsProp.trim().isEmpty()) {
+            allowedOriginsProp = env.getProperty("APP_CORS_ALLOWED_ORIGINS");
+        }
         if (allowedOriginsProp != null && !allowedOriginsProp.trim().isEmpty()) {
             configuration.setAllowedOrigins(Arrays.asList(allowedOriginsProp.split(",")));
         } else {
