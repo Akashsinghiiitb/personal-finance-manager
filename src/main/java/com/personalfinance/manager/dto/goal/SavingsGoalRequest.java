@@ -15,17 +15,19 @@ import java.time.LocalDate;
 @Builder
 public class SavingsGoalRequest {
 
-    @NotBlank(message = "Goal name must not be blank")
+    public interface OnCreate {}
+    public interface OnUpdate {}
+
+    @NotBlank(message = "Goal name must not be blank", groups = OnCreate.class)
     private String goalName;
 
-    @NotNull(message = "Target amount must not be null")
-    @Positive(message = "Target amount must be a positive number greater than 0")
+    @NotNull(message = "Target amount must not be null", groups = OnCreate.class)
+    @Positive(message = "Target amount must be a positive number greater than 0", groups = {OnCreate.class, OnUpdate.class})
     private BigDecimal targetAmount;
 
-    @NotNull(message = "Target date must not be null")
-    @FutureOrPresent(message = "Target date must be today or in the future")
+    @NotNull(message = "Target date must not be null", groups = OnCreate.class)
+    @FutureOrPresent(message = "Target date must be today or in the future", groups = {OnCreate.class, OnUpdate.class})
     private LocalDate targetDate;
 
-    @NotNull(message = "Start date must not be null")
     private LocalDate startDate;
 }

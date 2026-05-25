@@ -254,12 +254,29 @@ personal-finance-manager/
 
 ## Running Tests
 
-### Backend Unit Tests
-Run backend tests to verify core logic:
+The application features a comprehensive, deployment-ready JUnit 5 + Mockito test suite achieving **80%+ code coverage** across both the service layer (business logic validation) and the controller layer (API validation, security checks, and exceptions).
+
+### Backend Test Coverage
+1. **Service Tests (`*ServiceTest`)**: Validate core business operations, validation rules, user boundaries, data calculations, and isolated persistence logic.
+2. **Controller Tests (`*ControllerTest` via MockMvc)**: Validate REST endpoint mappings, incoming request payload validation, HTTP response statuses, security access levels, and custom global exception handling mappings.
+3. **JaCoCo Coverage Reporting**: Measures execution line coverage and exports HTML analysis reports.
+
+### Run Command
+Run the complete test suite from the root folder:
 ```bash
+# Using Maven Wrapper (Dynamic JAVA_HOME check)
+.\mvnw.cmd clean test   # On Windows PowerShell
+./mvnw clean test       # On Linux/macOS
+
+# Or using global Maven installation
 mvn clean test
 ```
-The test suite utilizes Mockito and JUnit 5, ensuring > 80% business layer coverage.
+
+### Viewing Coverage Reports
+Once the tests finish running successfully, JaCoCo outputs a detailed HTML coverage report. You can open it in your favorite browser:
+- Path: `target/site/jacoco/index.html`
+
+---
 
 ---
 
