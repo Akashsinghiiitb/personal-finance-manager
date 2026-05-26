@@ -66,7 +66,7 @@ public class SecurityConfig {
         if (allowedOriginsProp != null && !allowedOriginsProp.trim().isEmpty()) {
             configuration.setAllowedOrigins(Arrays.asList(allowedOriginsProp.split(",")));
         } else {
-            configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000"));
+            configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173","https://personal-finance-manager-3-2wq6.onrender.com", "http://localhost:3000"));
         }
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control", "Accept", "X-Requested-With", "Origin"));
